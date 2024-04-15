@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="flex justify-center items-center h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-md w-96">
+    <h2 class="text-2xl font-semibold mb-4">Inscription</h2>
+    <form method="post">
+        {% csrf_token %}
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="username"
+          >Username</label
+        >
+        <input
+          class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-400"
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Le nom d'utilisateur"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="email"
+          >Adresse e-mail</label
+        >
+        <input
+          class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-400"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Votre adresse e-mail"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password"
+          >Mot de passe</label
+        >
+        <input
+          class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-400"
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Votre mot de passe"
+          required
+        />
+      </div>
+      <div class="mb-6">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="password-confirm"
+          >Confirmer le mot de passe</label
+        >
+        <input
+          class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-400"
+          type="password"
+          id="password-confirm"
+          name="password-confirm"
+          placeholder="Confirmer votre mot de passe"
+          required
+        />
+      </div>
+      <div class="flex justify-between items-center">
+        <button
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          S'inscrire
+        </button>
+      </div>
+    </form>
+    <hr class="my-8 border-t" />
+    <p class="text-center">
+      Déjà inscrit ?
+      <a class="text-blue-500 hover:text-blue-600" href="{% url 'login-page' %}"
+        >Connectez-vous</a
+      >
+    </p>
+  </div>
+</div>
+
+{% endblock body %}

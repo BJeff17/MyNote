@@ -1,0 +1,108 @@
+{% extends 'base.html' %} {% block body %}
+
+<div class="flex flex-col items-center justify-center min-h-screen">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-auto mt-8">
+    <h1 class="text-4xl font-bold text-gray-800 mb-6">
+      Bienvenue sur My Note
+    </h1>
+    <p class="text-lg text-gray-700 mb-8">
+      Un endroit pour garder toutes vos pensées, idées et notes organisées et
+      accessibles où que vous soyez.
+    </p>
+    <div class="flex justify-center">
+      <a
+        href="/notes"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline"
+        >Voir mes notes</a
+      >
+    </div>
+  </div>
+
+  <div class="quote-container">
+    <p class="quote-text" id="quote"></p>
+  </div>
+</div>
+
+<script>
+  // Tableau de citations
+  const quotes_ = [
+    '"La gentillesse est une langue que les sourds peuvent entendre et les aveugles peuvent voir." - Mark Twain',
+    '"La simplicité est la sophistication ultime." - Léonard de Vinci',
+    '"La confiance en soi est le premier secret du succès." - Ralph Waldo Emerson',
+    '"Soyez le changement que vous souhaitez voir dans le monde." - Mahatma Gandhi',
+    '"La vie est une aventure audacieuse ou rien du tout." - Helen Keller',
+    '"Le bonheur se trouve dans les petites choses de la vie." - Inconnu',
+    "\"Le succès n'est pas final, l'échec n'est pas fatal : c'est le courage de continuer qui compte.\" - Winston Churchill",
+    '"La beauté est dans les yeux de celui qui regarde." - Oscar Wilde',
+    '"L\'avenir appartient à ceux qui croient en la beauté de leurs rêves." - Eleanor Roosevelt',
+    '"La patience est amère, mais son fruit est doux." - Jean-Jacques Rousseau',
+    '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+    '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+    '"La sagesse commence dans l\'émerveillement." - Socrate',
+    "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+    '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+    "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+    "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+    '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+    '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+    '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+    '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+    '"La sagesse commence dans l\'émerveillement." - Socrate',
+    "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+    '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+    "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+    "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+    '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+    '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+    '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+    '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+    '"La sagesse commence dans l\'émerveillement." - Socrate',
+    "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+    '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+    "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+    "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+    '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+    '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+    '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+    '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+    '"La sagesse commence dans l\'émerveillement." - Socrate',
+    "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+    '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+    "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+    "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+    '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+    '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+    '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+    '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+    '"La sagesse commence dans l\'émerveillement." - Socrate',
+    "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+    '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+    "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+    "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+    '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+    "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+    '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+  ];
+
+  // Fonction pour afficher une citation aléatoire
+  function displayQuote() {
+    const randomIndex = Math.floor(Math.random() * quotes_.length);
+    document.getElementById("quote").textContent = quotes_[randomIndex];
+  }
+
+  // Afficher une citation au chargement de la page
+  displayQuote();
+
+  // Actualiser la citation toutes les 10 secondes
+  setInterval(displayQuote, 15000);
+</script>
+
+{% endblock body %}

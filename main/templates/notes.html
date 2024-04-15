@@ -1,0 +1,150 @@
+
+{% extends 'base.html' %} 
+{% load static %}
+{% block body %}
+
+<link rel="stylesheet" href="{% static 'notes.css' %}">
+<main >
+  
+<nav class="bg-gray-100 shadow-md  h-13 flex ">
+  <div class="container mx-auto flex align-center ">
+      <button id="add_note" onclick="add_note_()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold h-8 rounded focus:outline-none focus:shadow-outline mr-4">Ajouter une note</button>
+      <!-- Ajoutez d'autres options de navigation si nécessaire -->
+  </div>
+</nav>
+
+<div class="container">
+<div class="title">Mes Notes</div>
+  
+  <div class="notes-container">
+    {% if have_notes %}
+    
+  
+    
+  {% for note in vos_notes %}
+
+    <div class="cont ">
+      <div class="note mx-1 {{note.title}} ">{{note.body}}
+        <textarea name="body" id="" cols="30" rows="10" style="display: none;"> {{note.body}}</textarea>
+      </div>
+    <div class="action mx-1 hidden flex flex-col space-y-2  bg-gray-700 h-full w-full relative left-0 rounded-3xl p-6 opacity-80 ease-in-out duration-1000">
+      <button id="editer" onclick="edit('{{note.slug}}')" class="bg-blue-500 hover:bg-blue-600 relative top-1/3 text-center  text-white font-bold h-7 w-150 rounded focus:outline-none focus:shadow-outline mr-4 rounded-full">Modifier</button>
+      <button id="supprime" onclick="del()" class="bg-blue-500 hover:bg-blue-600 text-center relative top-1/3 text-white font-bold h-7 w-150 rounded focus:outline-none focus:shadow-outline mr-4 rounded-full">supprimer</button>
+      
+    </div>
+    </div>
+  {% endfor %}
+  {% else %}
+  
+    <div class="note">Vous n'avez aucune notes Ajoutez en une</div>
+
+  {% endif %}
+  </div>
+  <div class="quote-container">
+    <p class="quote-text" id="quote"></p>
+  </div>
+  </div>
+</main>
+
+
+
+<script>
+// Tableau de citations
+const quotes_ = [
+  '"La gentillesse est une langue que les sourds peuvent entendre et les aveugles peuvent voir." - Mark Twain',
+  '"La simplicité est la sophistication ultime." - Léonard de Vinci',
+  '"La confiance en soi est le premier secret du succès." - Ralph Waldo Emerson',
+  '"Soyez le changement que vous souhaitez voir dans le monde." - Mahatma Gandhi',
+  '"La vie est une aventure audacieuse ou rien du tout." - Helen Keller',
+  '"Le bonheur se trouve dans les petites choses de la vie." - Inconnu',
+  "\"Le succès n'est pas final, l'échec n'est pas fatal : c'est le courage de continuer qui compte.\" - Winston Churchill",
+  '"La beauté est dans les yeux de celui qui regarde." - Oscar Wilde',
+  '"L\'avenir appartient à ceux qui croient en la beauté de leurs rêves." - Eleanor Roosevelt',
+  '"La patience est amère, mais son fruit est doux." - Jean-Jacques Rousseau',
+  '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+  '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+  '"La sagesse commence dans l\'émerveillement." - Socrate',
+  "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+  '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+  "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+  "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+  '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+  '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+  '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+  '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+  '"La sagesse commence dans l\'émerveillement." - Socrate',
+  "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+  '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+  "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+  "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+  '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+  '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+  '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+  '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+  '"La sagesse commence dans l\'émerveillement." - Socrate',
+  "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+  '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+  "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+  "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+  '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+  '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+  '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+  '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+  '"La sagesse commence dans l\'émerveillement." - Socrate',
+  "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+  '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+  "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+  "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+  '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+  '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+  '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  '"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter." - Mère Teresa',
+  '"La liberté est le droit de faire ce que les lois permettent." - Montesquieu',
+  '"La sagesse commence dans l\'émerveillement." - Socrate',
+  "\"Le succès c'est d'avoir ce que vous désirez. Le bonheur c'est aimer ce que vous avez.\" - H. Jackson Brown",
+  '"La vie est un mystère qu\'il faut vivre, et non un problème à résoudre." - Gandhi',
+  "\"La seule chose qu'on est sûr de ne pas réussir est celle qu'on ne tente pas.\" - Paul-Émile Victor",
+  "\"La vie c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.\" - Albert Einstein",
+  '"La seule manière de faire du bon travail est d\'aimer ce que vous faites." - Steve Jobs',
+  "\"La meilleure manière de prédire l'avenir, c'est de le créer.\" - Peter Drucker",
+  '"La vie c\'est comme une boîte de chocolats, on ne sait jamais sur quoi on va tomber." - Forrest Gump',
+];
+
+// Fonction pour afficher une citation aléatoire
+function displayQuote() {
+  const randomIndex = Math.floor(Math.random() * quotes_.length);
+  document.getElementById("quote").textContent = quotes_[randomIndex];
+}
+
+// Afficher une citation au chargement de la page
+displayQuote();
+
+// Actualiser la citation toutes les 10 secondes
+setInterval(displayQuote, 15000);
+</script>
+
+
+<script>
+  const notes = document.querySelectorAll(".cont")
+  notes.forEach(note=>{
+    const update = note.querySelector('.action')
+    console.log(update)
+    note.addEventListener("click",(e)=>{
+      update.classList.toggle("hidden")
+    })
+  })
+  function add_note_(){
+    window.location.href = "/add-note"
+  }
+  function edit(slug){
+    window.location.href = `${slug}`
+  }
+</script>
+{% endblock body %}

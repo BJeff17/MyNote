@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main>
+    
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-4">Ajouter une note</h1>
+    <form id="addNoteForm" method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Titre de la note</label>
+            <input value="{{note.title}}" class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-400" type="text" id="title" name="title" placeholder="Titre de la note" required>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="category">Catégorie</label>
+            <select class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-400" id="category" name="category" required>
+                <option value="{{note.categorie}}" disabled selected>{{note.categorie}}</option>
+                
+                {% for c in categories %}
+                <option value="{{c.name}}">{{c.name}}</option>
+                
+                {% endfor %}
+                    
+                <option value="autre">Autre</option>
+            </select>
+        </div>
+        <div class="mb-4 hidden" id="newCategorySection">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="newCategory">Nouvelle catégorie</label>
+            <input class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-400" type="text" id="newCategory" name="newCategory" placeholder="Entrez une nouvelle catégorie">
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="content">Contenu de la note</label>
+            <textarea class="border border-gray-300 rounded-lg px-4 py-2 w-full h-48 resize-none focus:outline-none focus:border-blue-400" id="content" name="content" placeholder="Contenu de la note" required>{{note.body}}</textarea>
+        </div>
+        <div class="flex justify-end">
+            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Update</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("category").addEventListener("change", function() {
+        var categoryInput = document.getElementById("newCategorySection");
+        if (this.value === "autre") {
+            categoryInput.classList.remove("hidden");
+        } else {
+            categoryInput.classList.add("hidden");
+        }
+    });
+</script>
+</main>
+ 
+{% endblock body %}
+    

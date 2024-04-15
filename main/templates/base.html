@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Notes</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+        main{
+    height: 100vh;
+  }
+      .quote-container {
+        max-width: 600px;
+        margin-top: 50px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .quote-text {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        color: #333;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-200">
+    <nav class="bg-gray-800 p-6">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+          <div class="flex items-center">
+              <a href="{% url 'home' %}" class="text-white text-lg font-semibold mr-4">My Note</a>
+              <div class="relative">
+                  <form action="{% url 'search' %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="title" class="bg-gray-700 text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Rechercher...">
+
+                  
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <button type="submit" class="text-gray-300 hover:text-white focus:outline-none focus:text-white">
+                          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" d="M8 3a5 5 0 100 10 5 5 0 000-10zM1 8a7 7 0 1114 0A7 7 0 011 8zm18 7a1 1 0 01-2 0v-2a5 5 0 00-5-5h-2a1 1 0 010-2h2a7 7 0 016.993 8.155L17 19a1 1 0 01-2 0z" clip-rule="evenodd"></path>
+                          </svg>
+                      </button>
+                    </form>
+                  </div>
+              </div>
+          </div>
+          <div class="md:hidden">
+              <button id="mobile-menu-button" class="text-white focus:outline-none">
+                  <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                  </svg>
+              </button>
+          </div>
+      </div>
+  </nav>
+  
+  <ul id="mobile-menu" class="hidden md:flex flex-col md:flex-row md:items-center bg-gray-800 p-6 space-y-4 md:space-y-0 md:space-x-6">
+      <li><a href="{% url 'unotes' %}" class="text-gray-300 hover:text-white">Mes notes</a></li>
+      <li><a href="{% url 'propos' %}" class="text-gray-300 hover:text-white">À propos</a></li>
+      <li><a href="{% url 'logout' %}" class="text-gray-300 hover:text-white">bye</a></li>
+  </ul>
+  
+  
+  
+  
+  
+
+    {% block body %} {% endblock body %}
+    <footer class="bg-gray-800 text-gray-300 py-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <p class="text-sm">© 2024 Valkyrie. Tous droits réservés.</p>
+        <ul class="flex space-x-4">
+          <li>
+            <a href="{% url 'home' %}" class="hover:text-blue-500">Accueil</a>
+          </li>
+          <li>
+            <a href="{% url 'propos' %}" class="hover:text-blue-500"
+              >À propos</a
+            >
+          </li>
+          <li><a href="https://wa.me/22969580217" class="hover:text-blue-500">Contact</a></li>
+        </ul>
+      </div>
+    </footer>
+    <script>
+      document.getElementById("mobile-menu-button").addEventListener("click", function() {
+          var menu = document.getElementById("mobile-menu");
+          if (menu.classList.contains("hidden")) {
+              menu.classList.remove("hidden");
+          } else {
+              menu.classList.add("hidden");
+          }
+      });
+  </script>
+  </body>
+</html>
